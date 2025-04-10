@@ -1,0 +1,8 @@
+{
+  "base_url": "https://www.example.com",
+  "bucket_name": "my-bucket",
+  "object_key": "{year}/{month}/{file_md5}.{ext}",
+  "aws_access_key_id": "",
+  "aws_secret_access_key": "",
+  "aws_region": ""
+}

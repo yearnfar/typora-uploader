@@ -1,4 +1,4 @@
-#! /opt/mambaforge/bin/python
+#! /bin/python
 
 import boto3
 import json
