@@ -77,8 +77,13 @@ def build_object_key(template, file_path):
 
 # === 主程序 ===
 if __name__ == "__main__":
+
+    # 获取脚本所在目录
+    SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+    DEFAULT_CONFIG_PATH = os.path.join(SCRIPT_DIR, 'config.json')
+
     parser = argparse.ArgumentParser(description="批量上传文件到 S3（提取包含 m5 的内容）")
-    parser.add_argument('--config', default='config.json', help='配置文件路径（默认：config.json）')
+    parser.add_argument('--config', default=DEFAULT_CONFIG_PATH, help='配置文件路径（默认：config.json）')
     parser.add_argument('files', nargs='+', help='要上传的文件路径列表')
     args = parser.parse_args()
 
