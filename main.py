@@ -6,6 +6,7 @@ import argparse
 import os
 import hashlib
 from datetime import datetime
+from PIL import Image
 import mimetypes
 
 # === 读取配置 ===
@@ -22,6 +23,13 @@ def calculate_md5(file_path):
         for chunk in iter(lambda: f.read(4096), b""):
             hash_md5.update(chunk)
     return hash_md5.hexdigest()
+
+# === 自动转换图片为 WebP ===
+def convert_to_webp(file_path):
+    img = Image.open(file_path)
+    webp_path = file_path.rsplit('.', 1)[0] + '.webp'
+    img.save(webp_path, "WEBP")
+    return webp_path
 
 # === 上传到 S3 ===
 def upload_to_s3(file_path, bucket, key, aws_config):
@@ -96,6 +104,12 @@ if __name__ == "__main__":
             if not os.path.isfile(file_path):
                 print(f"[{file_path}] 跳过，文件不存在")
                 continue
+
+              # 如果文件是 PNG 或 JPEG，转换为 WebP
+            _, ext = os.path.splitext(file_path)
+            ext = ext.lower()
+            if ext in ['.png', '.jpg', '.jpeg']:
+                file_path = convert_to_webp(file_path)
 
             filename = os.path.basename(file_path)
             object_key = build_object_key(object_key_template, file_path)
