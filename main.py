@@ -85,7 +85,6 @@ def build_object_key(template, file_path):
 
 # === 主程序 ===
 if __name__ == "__main__":
-
     # 获取脚本所在目录
     SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
     DEFAULT_CONFIG_PATH = os.path.join(SCRIPT_DIR, 'config.json')
@@ -106,10 +105,12 @@ if __name__ == "__main__":
                 continue
 
               # 如果文件是 PNG 或 JPEG，转换为 WebP
-            _, ext = os.path.splitext(file_path)
-            ext = ext.lower()
-            if ext in ['.png', '.jpg', '.jpeg']:
-                file_path = convert_to_webp(file_path)
+            is_convert_webp=config.get("image_to_webp")
+            if is_convert_webp:
+                _, ext = os.path.splitext(file_path)
+                ext = ext.lower()
+                if ext in ['.png', '.jpg', '.jpeg']:
+                    file_path = convert_to_webp(file_path)
 
             filename = os.path.basename(file_path)
             object_key = build_object_key(object_key_template, file_path)

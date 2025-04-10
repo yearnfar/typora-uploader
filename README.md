@@ -31,6 +31,7 @@ python main.py --config CONFIG_DIR/config.json file1.txt file2.txt
 
 ```json
 {
+  "image_to_webp": true,
   "base_url": "https://www.example.com",
   "bucket_name": "my-bucket",
   "object_key": "{year}/{month}/{file_md5}.{ext}",
