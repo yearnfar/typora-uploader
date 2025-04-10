@@ -4,7 +4,7 @@ import boto3
 import json
 import argparse
 import os
-import sys
+import hashlib
 from datetime import datetime
 import mimetypes
 
@@ -15,15 +15,13 @@ def load_config(config_path):
     with open(config_path, 'r', encoding='utf-8') as f:
         return json.load(f)
 
-# === 提取包含 m5 的行 ===
-def extract_m5(filepath):
-    with open(filepath, 'r', encoding='utf-8') as file:
-        for line in file:
-            if "m5" in line:
-                print(f"[{filepath}] 找到包含 'm5' 的行：{line.strip()}")
-                return line.strip()
-    print(f"[{filepath}] 未找到包含 'm5' 的行")
-    return None
+# === 计算文件 MD5 ===
+def calculate_md5(file_path):
+    hash_md5 = hashlib.md5()
+    with open(file_path, "rb") as f:
+        for chunk in iter(lambda: f.read(4096), b""):
+            hash_md5.update(chunk)
+    return hash_md5.hexdigest()
 
 # === 上传到 S3 ===
 def upload_to_s3(file_path, bucket, key, aws_config):
@@ -55,16 +53,21 @@ def build_object_key(template, file_path):
     filename = os.path.basename(file_path)
     name, ext = os.path.splitext(filename)
     ext = ext.lstrip('.')
-    # md5 = extract_m5(file_path)
+    file_md5 = calculate_md5(file_path)
 
     substitutions = {
         "filename": filename,
         "name": name,
         "ext": ext,
         "timestamp": str(int(now.timestamp())),
-        "date": now.strftime("%Y-%m-%d"),
-        "datetime": now.strftime("%Y%m%d_%H%M%S"),
-        # "md5": md5
+        "full_year": now.strftime("%Y"), 
+        "full_month": now.strftime("%m"), 
+        "full_day": now.strftime("%d"), 
+        "year": now.strftime("%y"), 
+        "month":str(now.month),
+        "day":str(now.day),
+        "datetime_second": now.strftime("%Y%m%d%H%M%S"),
+        "file_md5": file_md5
     }
 
     for key, value in substitutions.items():
