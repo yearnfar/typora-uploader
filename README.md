@@ -1,6 +1,16 @@
 # s3-uploader
 AWS s3上传脚本
 
+s3-uploader适合在Typora工具中上传图片资源到AWS S3
+
+### Feature
+- 上传到AWS s3
+- 支持上传后根据定义模版修改文件名
+- 支持png、jpg文件转webp
+
+[演示](./assets/example.png)
+
+
 ### Install
 
 ```shell
@@ -12,9 +22,9 @@ pip install -r requirement.txt
 默认加载main.py所在目录的config.json配置，也可以通过 --config 指定配置文件:
 
 ```shell
-main.py file1.txt file2.txt
+python main.py file1.txt file2.txt
 
-main.py --config file1.txt file2.txt
+python main.py --config CONFIG_DIR/config.json file1.txt file2.txt
 ```
 
 ### config.json
