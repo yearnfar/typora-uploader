@@ -1,5 +1,4 @@
 # s3-uploader
-AWS s3上传脚本
 
 s3-uploader适合在Typora工具中上传图片资源到AWS S3
 
