@@ -1,6 +1,6 @@
-# s3-uploader
+# typora-s3-uploader
 
-s3-uploader适合在Typora工具中上传图片资源到AWS S3
+typora-s3-uploader支持在Typora工具中上传图片资源到AWS S3
 
 ![Typora设置](./assets/example.png)
 
@@ -9,7 +9,6 @@ s3-uploader适合在Typora工具中上传图片资源到AWS S3
 - 上传到AWS s3
 - 支持上传后根据定义模版修改文件名
 - 支持png、jpg文件转webp
-
 
 ### Install
 
