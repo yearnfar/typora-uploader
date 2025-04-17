@@ -26,8 +26,12 @@ def calculate_md5(file_path):
 
 # === 自动转换图片为 WebP ===
 def convert_to_webp(file_path):
+    dst_dir = os.path.join(os.path.dirname(file_path), "minified")
+    if not os.path.exists(dst_dir):
+        os.makedirs(dst_dir)
+
     img = Image.open(file_path)
-    webp_path = file_path.rsplit('.', 1)[0] + '.webp'
+    webp_path = os.path.join(dst_dir, os.path.basename(file_path).rsplit('.', 1)[0] + '.webp')
     img.save(webp_path, "WEBP")
     return webp_path
 
