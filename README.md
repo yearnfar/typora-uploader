@@ -1,12 +1,13 @@
-# typora-s3-uploader
+# typora-uploader
 
-typora-s3-uploader 支持在 Typora 工具中上传图片资源到 AWS S3
+typora-uploader 支持在 Typora 工具中上传图片资源到 AWS S3
 
 ![Typora设置](./assets/example.png)
 
 ### Feature
 
-- 上传到 AWS s3
+- 上传到 AWS S3
+- 上传到 Aliyun OSS
 - 支持上传后根据定义模版修改文件名
 - 支持 png、jpg 文件转 webp
 
@@ -30,8 +31,8 @@ python main.py --config CONFIG_DIR/config.json file1.txt file2.txt
 
 | 字段              | 说明                | 示例                                  |
 | ----------------- | ------------------- | ------------------------------------- |
-| type              | 类型，支持 s3, oss  | "oss"                                 |
-| region            | 区域                | "oss-cn-hangzhou" 或 "ap-southeast-1" |
+| type              | 类型，支持 s3, oss  | "s3" 或 "oss"                         |
+| region            | 区域                | "ap-southeast-1" 或 "oss-cn-hangzhou" |
 | image_to_webp     | 图片转为 webp       | true                                  |
 | base_url          | 自定义 URL          | "https://www.example.com"             |
 | bucket_name       | 桶名称              | "my-bucket"                           |
@@ -59,10 +60,10 @@ python main.py --config CONFIG_DIR/config.json file1.txt file2.txt
   "type": "oss",
   "image_to_webp": true,
   "base_url": "https://www.example.com",
+  "region": "",
   "bucket_name": "my-bucket",
   "object_key": "{year}/{month}/{file_md5}.{ext}",
   "access_key_id": "",
-  "access_key_secret": "",
-  "region": ""
+  "access_key_secret": ""
 }
 ```
