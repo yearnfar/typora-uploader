@@ -1,6 +1,6 @@
 # typora-uploader
 
-typora-uploader 支持在 Typora 工具中上传图片资源到 AWS S3
+typora-uploader 支持在 Typora 工具中上传图片资源到 AWS S3 或 Aliyun OSS
 
 ![Typora设置](./assets/example.png)
 
