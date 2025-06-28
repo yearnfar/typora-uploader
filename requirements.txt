@@ -1,2 +1,5 @@
 boto3==1.37.31
+oss2==2.19.1
+aliyun-python-sdk-core==2.16.0
+aliyun-python-sdk-kms==2.16.5
 Pillow==11.1.0

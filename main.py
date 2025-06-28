@@ -1,6 +1,7 @@
 #! /bin/python
 
 import boto3
+import oss2
 import json
 import argparse
 import os
@@ -35,25 +36,38 @@ def convert_to_webp(file_path):
     img.save(webp_path, "WEBP")
     return webp_path
 
-# === 上传到 S3 ===
-def upload_to_s3(file_path, bucket, key, aws_config):
+def guess_mime_type(file_path: str) -> str:
+    return mimetypes.guess_type(file_path)[0] or "application/octet-stream"
+
+# === 上传到 aliyun OSS ===
+def upload_to_oss(file_path, bucket, key, config):
     base_url = config.get('base_url')
-        # 自动识别 MIME 类型
-    content_type, _ = mimetypes.guess_type(file_path)
-    if not content_type:
-        content_type = "application/octet-stream"
+    auth = oss2.Auth(config.get('access_key_id'), config.get('access_key_secret'))
+    bucket = oss2.Bucket(auth, "https://"+config.get('region')+".aliyuncs.com", bucket_name)
+
+    with open(file_path, 'rb') as f:
+        try:
+            bucket.put_object(key, f, headers={'Content-Type': guess_mime_type(file_path)})
+            print(f"{base_url}/{key}")
+        except Exception as e:
+            print(f"[{file_path}] 上传失败：{e}")
+            return False
+    return True
         
+# === 上传到 AWS S3 ===
+def upload_to_s3(file_path, bucket, key, config):
+    base_url = config.get('base_url')
     s3 = boto3.client('s3',
-        aws_access_key_id=aws_config.get('aws_access_key_id'),
-        aws_secret_access_key=aws_config.get('aws_secret_access_key'),
-        region_name=aws_config.get('aws_region')
+        aws_access_key_id=config.get('access_key_id'),
+        aws_secret_access_key=config.get('access_key_secret'),
+        region_name=config.get('region')
     )
     try:
         s3.upload_file(
             Filename=file_path,
             Bucket=bucket,
             Key=key,
-            ExtraArgs={'ContentType': content_type}
+            ExtraArgs={'ContentType': guess_mime_type(file_path)}
         )
         print(f"{base_url}/{key}")
     except Exception as e:
@@ -118,7 +132,10 @@ if __name__ == "__main__":
 
             filename = os.path.basename(file_path)
             object_key = build_object_key(object_key_template, file_path)
-            upload_to_s3(file_path, bucket_name, object_key, config)
+            if config.get("type") == "s3":
+                upload_to_s3(file_path, bucket_name, object_key, config)
+            elif config.get("type") == "oss":
+                upload_to_oss(file_path, bucket_name, object_key, config)
 
     except Exception as e:
         print(f"程序出错：{e}")
